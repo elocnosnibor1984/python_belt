@@ -1,0 +1,68 @@
+<html>
+  <head>
+    <link rel="stylesheet" href="/static/css/styles.css" type="text/css">
+  </head>
+  <body>
+  <div id="container">
+  <h1>Welcome, {{alias[0]['alias']}}!</h1>
+  <div class="container">
+  <a href="/logout">Logout</a>
+
+  <div class="quotes">
+  <h2>Quotable Quotes</h2>
+  <!-- {{quotes}} -->
+  <div class="quotes2">
+  {%for quote in quotes:%}
+  <div class="quote">
+  <p><span class="author">{{quote['author']}}:</span> {{quote['message']}} </p>
+  <p>Posted by <a href="/show_user/{{quote['user_id']}}">{{quote['name']}}</a>: 
+  <form action="/add_to_favorites" method="post">
+    <input type="hidden" name="quote_id" value="{{quote['quote_id']}}">
+    <input type="hidden" name="user_id" value="{{session['user_id']}}">
+    <input type="submit" name="submit" value="Add to My List">
+  </form></p>
+
+  </div> <!-- close quote -->
+  {%endfor%}
+  </div> <!-- close quotes2 -->
+  </div><!-- close quotes -->
+
+
+  <div class="favQuotes">
+    <h2>Your Favorites</h2>
+    <!-- {{favorites}} -->
+
+    <div class="quotes3">
+    {%for favorite in favorites:%}
+    <div class="quote">
+      <p><span class="author">{{favorite['author']}}:</span>{{favorite['message']}}</p>
+  <p>Posted by: <a href="/show_user/{{favorite['user_id']}}">{{favorite['alias']}}</a>
+  <form action="/remove_from_favorites" method="post">
+    <input type="hidden" name="quote_id" value="{{favorite['quote_id']}}">
+    <input type="submit" name="submit" value="Remove From My List">
+    <!-- {{favorite['quote_id']}} -->
+  </form></p>
+    </div><!-- close quote -->
+    {%endfor%}
+    </div> <!-- close quotes2 -->
+  </div><!-- close quotes -->
+ 
+   <div>
+     <h2>Contribute a Quote</h2>
+     {% with messages = get_flashed_messages() %}
+      {% if messages %}
+          {% for message in messages %}
+            <p style="color:red">{{message}}</p>
+          {% endfor %}
+      {% endif %}
+    {% endwith %}
+     <form action="/add_quote" method="post">
+     <input type="hidden" name="user_id" value="{{session['user_id']}}">
+       <p><label>Quoted By:</label><input type="text" name="author"></p>
+       <p><label>Message:</label>
+       <textarea name="message"></textarea></p>
+       <p><input type="submit" name="submit" value="Submit"></p>
+     </form>
+   </div>
+  </body><!-- close container -->
+</html>
